@@ -30,3 +30,18 @@ Thumbs.db
 
 # pytest
 .pytest_cache/
+
+# Zoho API specs (reference only, not project code)
+*.yml
+!requirements.yml
+
+# Debug / scratch files
+debug*.py
+debug*.json
+test_regex.py
+
+# Test invoice samples
+test invoice/
+
+# Agent config
+.agent/

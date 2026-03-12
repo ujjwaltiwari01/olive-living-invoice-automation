@@ -23,7 +23,7 @@ def handle_processing():
 
     progress_bar = st.progress(0, text="Preparing Document AI pipeline...")
     
-    from utils.zoho_mapper import normalize_ocr_data, map_to_zoho_schema
+    from utils.llm_mapper import map_invoice_via_llm
     
     # Execute batch processing (synchronous with individual retries inside document_ai)
     results = process_batch_invoices(to_process, progress_bar)
@@ -41,15 +41,14 @@ def handle_processing():
             filename = res["filename"]
             raw_data = res.get("data", {})
             
-            # Phase 1: Normalize
-            normalized = normalize_ocr_data(raw_data)
-            
-            # Phase 2: Map to Zoho (Draft)
-            mapped = map_to_zoho_schema(normalized)
+            # Phase 1 & 2: Normalize and Map via LLM Agent
+            mapped = {}
+            if raw_data and res["status"] == "processed":
+                mapped = map_invoice_via_llm(raw_data)
             
             # Phase 3: Setup state for Human Verification
             record_status = "UNDER_REVIEW"
-            if res["status"] != "processed":
+            if res["status"] != "processed" or mapped.get("Mapping Failed"):
                 record_status = "INCOMPLETE_DATA" # Failed OCR but still pushes to manual review via UI
                 
             new_record = {

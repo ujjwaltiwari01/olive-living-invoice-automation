@@ -16,8 +16,13 @@ def _display_line_items_editor(mapped_data: Dict[str, Any]) -> list:
     # Initialize an empty row if parsing failed completely but invoice exists
     lines = mapped_data.get("line_items", [])
     if not lines:
-        lines = [{"Item Name": "", "Item Desc": "", "Quantity": 1.0, "Item Price": 0.0, "Item Tax %": 0.0, "HSN/SAC": ""}]
-        
+        lines = [{"Item Name": "", "Item Desc": "", "Quantity": 1.0, "Item Price": 0.0, "Item Tax %": 0.0, "Is Inclusive Tax": False, "HSN/SAC": ""}]
+    else:
+        # Guarantee missing boolean exists to prevent column render mismatch on old cache
+        for l in lines:
+            if "Is Inclusive Tax" not in l:
+                l["Is Inclusive Tax"] = False
+                
     df = pd.DataFrame(lines)
     
     # Configuration for the editor
@@ -27,6 +32,7 @@ def _display_line_items_editor(mapped_data: Dict[str, Any]) -> list:
         "Quantity": st.column_config.NumberColumn("Quantity", min_value=0.0, format="%.2f"),
         "Item Price": st.column_config.NumberColumn("Item Price", min_value=0.0, format="%.2f"),
         "Item Tax %": st.column_config.NumberColumn("Tax %", min_value=0.0, max_value=100.0, format="%.2f"),
+        "Is Inclusive Tax": st.column_config.CheckboxColumn("Tax Inclusive?", default=False),
         "HSN/SAC": st.column_config.TextColumn("HSN/SAC")
     }
 
@@ -82,23 +88,38 @@ def display_verification_interface():
         
         col1, col2, col3 = st.columns(3)
         with col1:
-            inv_num = st.text_input("Invoice Number *", value=mapped_data.get("Invoice Number", ""))
-            inv_date = st.text_input("Invoice Date (YYYY-MM-DD) *", value=mapped_data.get("Invoice Date", ""))
+            inv_num = st.text_input("Invoice Number *", value=mapped_data.get("Invoice Number") or "")
+            inv_date = st.text_input("Invoice Date (YYYY-MM-DD) *", value=mapped_data.get("Invoice Date") or "")
             
         with col2:
-            cust_name = st.text_input("Customer/Supplier Name *", value=mapped_data.get("Customer Name", ""))
-            due_date = st.text_input("Due Date (YYYY-MM-DD)", value=mapped_data.get("Due Date", ""))
+            cust_name = st.text_input("Customer/Supplier Name *", value=mapped_data.get("Customer Name") or "")
+            due_date = st.text_input("Due Date (YYYY-MM-DD)", value=mapped_data.get("Due Date") or "")
             
         with col3:
-            gstin = st.text_input("GSTIN", value=mapped_data.get("GST Identification Number", ""))
-            curr = st.text_input("Currency Code", value=mapped_data.get("Currency Code", "INR"))
+            gstin = st.text_input("GSTIN", value=mapped_data.get("GST Identification Number (GSTIN)") or "")
+            curr = st.text_input("Currency Code", value=mapped_data.get("Currency Code") or "INR")
             
         col4, col5 = st.columns(2)
         with col4:
-            total_amt_input = st.text_input("Expected Total Amount", value=str(mapped_data.get("Total Amount", "0.0")))
-            notes = st.text_area("Notes", value=mapped_data.get("Notes", ""))
+            total_v = mapped_data.get("total_amount")
+            total_amt_input = st.text_input("Expected Total Amount", value=str(total_v) if total_v is not None else "0.0")
+            
+            tcs_v = mapped_data.get("TCS Amount")
+            tcs_amt_input = st.text_input("TCS Amount", value=str(tcs_v) if tcs_v is not None else "0.0")
+            
+            notes = st.text_area("Notes", value=mapped_data.get("Notes") or "")
         with col5:
-            tax_amt_input = st.text_input("Expected Tax Amount", value=str(mapped_data.get("Tax Amount", "0.0")))
+            tax_v = mapped_data.get("tax_amount")
+            tax_amt_input = st.text_input("Expected Tax Amount", value=str(tax_v) if tax_v is not None else "0.0")
+            
+            tds_v = mapped_data.get("TDS Amount")
+            tds_amt_input = st.text_input("TDS Amount", value=str(tds_v) if tds_v is not None else "0.0")
+            
+        bypass_math = st.checkbox(
+            "⚠️ Bypass Line Item Math (Consolidated Invoice)", 
+            value=mapped_data.get("Bypass Math", False), 
+            help="Check this if the invoice only has a grand total and individual line prices are missing/hallucinated by OCR."
+        )
         
         # Line Items
         updated_lines = _display_line_items_editor(mapped_data)
@@ -113,7 +134,7 @@ def display_verification_interface():
         submit_reject = a_col3.form_submit_button("❌ Reject")
         
         if submit_approve or submit_flag or submit_reject:
-            # Reconstruct the schema payload with user edits
+            # Reconstruct the schema payload with user edits, preserving all 74 original LLM mapped keys
             try:
                 total_val = float(total_amt_input)
             except ValueError:
@@ -124,18 +145,32 @@ def display_verification_interface():
             except ValueError:
                 tax_val = 0.0
                 
-            edited_payload = {
+            try:
+                tcs_val = float(tcs_amt_input)
+            except ValueError:
+                tcs_val = 0.0
+                
+            try:
+                tds_val = float(tds_amt_input)
+            except ValueError:
+                tds_val = 0.0
+                
+            edited_payload = mapped_data.copy()
+            edited_payload.update({
                 "Invoice Number": inv_num,
                 "Invoice Date": inv_date,
                 "Due Date": due_date,
                 "Customer Name": cust_name,
                 "Currency Code": curr,
-                "GST Identification Number": gstin,
+                "GST Identification Number (GSTIN)": gstin,
                 "Notes": notes,
-                "Total Amount": total_val,
-                "Tax Amount": tax_val,
+                "total_amount": total_val,
+                "tax_amount": tax_val,
+                "TCS Amount": tcs_val,
+                "TDS Amount": tds_val,
+                "Bypass Math": bypass_math,
                 "line_items": updated_lines
-            }
+            })
             
             # Re-run validation on edited data
             final_errors = validate_financial_rules(edited_payload)

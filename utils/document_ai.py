@@ -38,6 +38,36 @@ def get_document_ai_client() -> documentai.DocumentProcessorServiceClient:
         return None
 
 
+def _sanitize_total_amount(val: str) -> str:
+    """
+    Heuristic specifically for total amounts. Document AI reads "160,76" as "160,760".
+    If the string matches \d+,\d{3} but the last 1 or 2 chars are 0, it is extremely 
+    likely to be a botched decimal (e.g. "160,760" -> 160.76).
+    We only apply this to top-level totals to anchor the LLM.
+    """
+    if not val or not isinstance(val, str):
+        return val
+        
+    import re
+    
+    # Match patterns like "160,760", "37,500" where the comma acts as a decimal
+    if re.fullmatch(r'\d+,\d{2}0', val.strip()) or re.fullmatch(r'\d+,\d00', val.strip()):
+        clean_num = val.strip().replace(',', '')
+        try:
+            return str(float(clean_num) / 1000.0)
+        except ValueError:
+            pass
+            
+    # Also catch "160,760" where it's 3 digits comma 3 digits: \d{1,3},\d{3}
+    if re.fullmatch(r'\d{1,3},\d{3}', val.strip()) and val.strip().endswith('0'):
+        clean_num = val.strip().replace(',', '')
+        try:
+            return str(float(clean_num) / 1000.0)
+        except ValueError:
+            pass
+            
+    return val
+
 def extract_entities(document: documentai.Document) -> dict:
     """
     Parses Document AI entities such as supplier_name, total_amount, etc.
@@ -52,7 +82,8 @@ def extract_entities(document: documentai.Document) -> dict:
         "due_date": None,
         "currency_code": None,
         "gstin": None,
-        "line_items": []
+        "line_items": [],
+        "raw_text": document.text if hasattr(document, 'text') else ""
     }
     
     if not hasattr(document, 'entities'):
@@ -106,6 +137,12 @@ def extract_entities(document: documentai.Document) -> dict:
                 line_dict["description"] = val.replace('\n', ' ')
                 
             data["line_items"].append(line_dict)
+            
+    # CRITICAL: Anchor the LLM's logic by fixing the top-level total amounts.
+    # If the total is fixed, the LLM's own arithmetic prompt will fix the children.
+    for key in ["total_amount", "tax_amount"]:
+        if data.get(key):
+            data[key] = _sanitize_total_amount(data[key])
             
     return data
 

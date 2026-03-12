@@ -4,6 +4,7 @@ from PIL import Image
 import io
 from utils.logger import get_logger
 
+
 logger = get_logger(__name__)
 
 def process_camera_image(image_bytes: bytes) -> bytes:

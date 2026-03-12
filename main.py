@@ -38,7 +38,7 @@ def main():
     with col1:
         st.image("https://cdn-icons-png.flaticon.com/512/3135/3135694.png", width=60)
     with col2:
-        st.title("Invoice Dashboard")
+        st.title("Olive Invoice Dashboard")
         st.markdown("<p style='font-size: 1.1rem; color: gray; margin-top: -10px;'>Upload and manage invoices for automated Document AI processing</p>", unsafe_allow_html=True)
     
     st.divider()
@@ -87,6 +87,11 @@ def main():
             
         extracted_df = pd.DataFrame(flat_results)
         st.dataframe(extracted_df, use_container_width=True, hide_index=True)
+        
+        st.markdown("#### Raw Mapped Data (JSON)")
+        for v in verified_records:
+            with st.expander(f"View JSON for {v['filename']}"):
+                st.json(v["verified_payload"])
 
 if __name__ == "__main__":
     main()
