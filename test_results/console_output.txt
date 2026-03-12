@@ -1,0 +1,574 @@
+﻿
+ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+  OLIVE INVOICE AUTOMATION ΓÇö PRODUCTION PIPELINE TEST
+  Testing 9 invoices through 5 stages
+ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+  Initializing Document AI client...
+  Γ£à Client ready.
+
+  Found 9 invoice files:
+    [1] Screenshot 2026-03-07 221907.png
+    [2] Screenshot 2026-03-08 002314.png
+    [3] Screenshot 2026-03-08 003133.png
+    [4] Screenshot 2026-03-08 005536.png
+    [5] Screenshot 2026-03-08 012341.png
+    [6] Screenshot 2026-03-08 013335.png
+    [7] Screenshot 2026-03-08 160824.png
+    [8] Screenshot 2026-03-08 161306.png
+    [9] Screenshot 2026-03-08 164719.png
+
+######################################################################
+  INVOICE 1: Screenshot 2026-03-07 221907.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-07 221907.png
+======================================================================
+2026-03-12 23:21:57,257 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-07 221907.png
+2026-03-12 23:22:04,614 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-07 221907.png processed successfully.
+  Γ£à OCR SUCCESS
+     Line items extracted: 4
+     Raw text captured: True
+     Supplier: SAN SOFTWARE
+     Total: 1988
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-07 221907.png
+======================================================================
+2026-03-12 23:22:04,618 - utils.llm_mapper - INFO - Sending invoice 1043 to LLM for Schema Mapping...
+2026-03-12 23:22:17,447 - utils.llm_mapper - INFO - Successfully mapped invoice via LLM.
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: 1043
+     Customer:  SIP & FLIP HEALTH MAGIC
+     Line items: 4
+     Total:     1988.0
+     GST:       business_gst
+     GSTIN:     33CAXKLYE2019
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-07 221907.png
+======================================================================
+2026-03-12 23:22:17,449 - utils.financial_validation - WARNING - VALIDATION_FAILED: 1 errors found for invoice '1043'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (1):
+     ΓÇó Amount Consistency Failure: Sum of line items (1835.05) does not match Total Amount (1988.00).
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-07 221907.png
+======================================================================
+2026-03-12 23:22:17,449 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: 1043
+2026-03-12 23:22:17,449 - utils.zoho_schema_transformer - WARNING - customer_id resolution stubbed for 'SIP & FLIP HEALTH MAGIC'. Actual Zoho Contacts API lookup needed before API submission.
+2026-03-12 23:22:17,451 - utils.zoho_schema_transformer - WARNING - Payload validation failed with 1 error(s): ["'gst_no' must be 15 characters, got 13"]
+2026-03-12 23:22:17,451 - utils.zoho_schema_transformer - ERROR - Zoho payload INVALID for invoice: 1043
+  Γ¥î ZOHO TRANSFORMATION FAILED (1 errors):
+     ΓÇó 'gst_no' must be 15 characters, got 13
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-07 221907.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (4 items)
+  Γ£à customer present: SIP & FLIP HEALTH MAGIC
+  Γ£à date: 2019-01-25
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 20.2s
+
+######################################################################
+  INVOICE 2: Screenshot 2026-03-08 002314.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 002314.png
+======================================================================
+2026-03-12 23:22:17,467 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 002314.png
+2026-03-12 23:22:22,843 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 002314.png processed successfully.
+  Γ£à OCR SUCCESS
+     Line items extracted: 2
+     Raw text captured: True
+     Supplier: Kiran Enterprises
+     Total: 3500
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 002314.png
+======================================================================
+2026-03-12 23:22:22,844 - utils.llm_mapper - INFO - Sending invoice SHB/456/20 to LLM for Schema Mapping...
+2026-03-12 23:22:27,248 - utils.llm_mapper - INFO - Successfully mapped invoice via LLM.
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: SHB/456/20
+     Customer:  Kiran Enterprises
+     Line items: 1
+     Total:     4130.0
+     GST:       business_gst
+     GSTIN:     29AAFFC8126N1ZZ
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 002314.png
+======================================================================
+2026-03-12 23:22:27,248 - utils.financial_validation - INFO - Financial validation passed for invoice 'SHB/456/20'.
+  Γ£à FINANCIAL VALIDATION PASSED (0 warnings)
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 002314.png
+======================================================================
+2026-03-12 23:22:27,248 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: SHB/456/20
+2026-03-12 23:22:27,248 - utils.zoho_schema_transformer - WARNING - customer_id resolution stubbed for 'Kiran Enterprises'. Actual Zoho Contacts API lookup needed before API submission.
+2026-03-12 23:22:27,248 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:22:27,248 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: SHB/456/20
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 002314.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (1 items)
+  Γ£à customer present: Kiran Enterprises
+  Γ£à date: 2020-12-20
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 30.0s
+
+######################################################################
+  INVOICE 3: Screenshot 2026-03-08 003133.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 003133.png
+======================================================================
+2026-03-12 23:22:27,273 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 003133.png
+2026-03-12 23:22:32,288 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 003133.png processed successfully.
+  Γ£à OCR SUCCESS
+     Line items extracted: 5
+     Raw text captured: True
+     Supplier: Alpha Sales
+     Total: 25.000
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 003133.png
+======================================================================
+2026-03-12 23:22:32,290 - utils.llm_mapper - INFO - Sending invoice eb78c983f3b917b44152- to LLM for Schema Mapping...
+2026-03-12 23:22:37,484 - utils.llm_mapper - INFO - Successfully mapped invoice via LLM.
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: TI/BVN/1953
+     Customer:  GAJENDRA STEEL
+     Line items: 1
+     Total:     2974.0
+     GST:       business_gst
+     GSTIN:     24AAIFG0955A1ZW
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 003133.png
+======================================================================
+2026-03-12 23:22:37,484 - utils.financial_validation - INFO - Financial validation passed for invoice 'TI/BVN/1953'.
+  Γ£à FINANCIAL VALIDATION PASSED (0 warnings)
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 003133.png
+======================================================================
+2026-03-12 23:22:37,484 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: TI/BVN/1953
+2026-03-12 23:22:37,484 - utils.zoho_schema_transformer - WARNING - customer_id resolution stubbed for 'GAJENDRA STEEL'. Actual Zoho Contacts API lookup needed before API submission.
+2026-03-12 23:22:37,484 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:22:37,484 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: TI/BVN/1953
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 003133.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (1 items)
+  Γ£à customer present: GAJENDRA STEEL
+  Γ£à date: 2021-01-23
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 40.2s
+
+######################################################################
+  INVOICE 4: Screenshot 2026-03-08 005536.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 005536.png
+======================================================================
+2026-03-12 23:22:37,499 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 005536.png
+2026-03-12 23:22:41,946 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 005536.png processed successfully.
+  Γ£à OCR SUCCESS
+     Line items extracted: 11
+     Raw text captured: True
+     Supplier: S (MFG) PVT LTD
+     Total: 986267
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 005536.png
+======================================================================
+2026-03-12 23:22:41,949 - utils.llm_mapper - INFO - Sending invoice VYZ/22-23/G-113 to LLM for Schema Mapping...
+2026-03-12 23:22:55,696 - utils.llm_mapper - INFO - Successfully mapped invoice via LLM.
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: VYZ/22-23/G-113
+     Customer:  ZAINULABDIN TEXTILES (MFG) PVT LTD
+     Line items: 10
+     Total:     986267.0
+     GST:       business_gst
+     GSTIN:     33AABCZ4537H1ZB
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 005536.png
+======================================================================
+2026-03-12 23:22:55,696 - utils.financial_validation - WARNING - VALIDATION_FAILED: 1 errors found for invoice 'VYZ/22-23/G-113'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (1):
+     ΓÇó Amount Consistency Failure: Sum of line items (488.25) does not match Total Amount (986267.00).
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 005536.png
+======================================================================
+2026-03-12 23:22:55,696 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: VYZ/22-23/G-113
+2026-03-12 23:22:55,697 - utils.zoho_schema_transformer - WARNING - customer_id resolution stubbed for 'ZAINULABDIN TEXTILES (MFG) PVT LTD'. Actual Zoho Contacts API lookup needed before API submission.
+2026-03-12 23:22:55,697 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:22:55,697 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: VYZ/22-23/G-113
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 005536.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (10 items)
+  Γ£à customer present: ZAINULABDIN TEXTILES (MFG) PVT LTD
+  Γ£à date: 2022-06-04
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 58.5s
+
+######################################################################
+  INVOICE 5: Screenshot 2026-03-08 012341.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 012341.png
+======================================================================
+2026-03-12 23:22:55,719 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 012341.png
+2026-03-12 23:22:59,200 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 012341.png processed successfully.
+  Γ£à OCR SUCCESS
+     Line items extracted: 4
+     Raw text captured: True
+     Supplier: None
+     Total: 103743
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 012341.png
+======================================================================
+2026-03-12 23:22:59,202 - utils.llm_mapper - INFO - Sending invoice ::T-0001/2023-2024 to LLM for Schema Mapping...
+2026-03-12 23:23:08,197 - utils.llm_mapper - INFO - Successfully mapped invoice via LLM.
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: ::T-0001/2023-2024
+     Customer:  Jenish
+     Line items: 4
+     Total:     103743.0
+     GST:       business_gst
+     GSTIN:     01ASASASASASIZX
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 012341.png
+======================================================================
+2026-03-12 23:23:08,197 - utils.financial_validation - WARNING - VALIDATION_FAILED: 1 errors found for invoice '::T-0001/2023-2024'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (1):
+     ΓÇó Amount Consistency Failure: Sum of line items (107085.00) does not match Total Amount (103743.00).
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 012341.png
+======================================================================
+2026-03-12 23:23:08,197 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: ::T-0001/2023-2024
+2026-03-12 23:23:08,197 - utils.zoho_schema_transformer - WARNING - customer_id resolution stubbed for 'Jenish'. Actual Zoho Contacts API lookup needed before API submission.
+2026-03-12 23:23:08,197 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:23:08,197 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: ::T-0001/2023-2024
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 012341.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (4 items)
+  Γ£à customer present: Jenish
+  Γ£à date: 2023-06-25
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 71.0s
+
+######################################################################
+  INVOICE 6: Screenshot 2026-03-08 013335.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 013335.png
+======================================================================
+2026-03-12 23:23:08,215 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 013335.png
+2026-03-12 23:23:12,350 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 013335.png processed successfully.
+  Γ£à OCR SUCCESS
+     Line items extracted: 1
+     Raw text captured: True
+     Supplier: Ambika Traders.
+     Total: 56250
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 013335.png
+======================================================================
+2026-03-12 23:23:12,351 - utils.llm_mapper - INFO - Sending invoice AT/23-24/2733 to LLM for Schema Mapping...
+2026-03-12 23:23:17,697 - utils.llm_mapper - INFO - Successfully mapped invoice via LLM.
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: AT/23-24/2733
+     Customer:  JMD ENTERPRISES
+     Line items: 1
+     Total:     56250.0
+     GST:       business_gst
+     GSTIN:     08BJYPR4499A1ZF
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 013335.png
+======================================================================
+2026-03-12 23:23:17,697 - utils.financial_validation - INFO - Financial validation passed for invoice 'AT/23-24/2733'.
+  Γ£à FINANCIAL VALIDATION PASSED (0 warnings)
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 013335.png
+======================================================================
+2026-03-12 23:23:17,697 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: AT/23-24/2733
+2026-03-12 23:23:17,697 - utils.zoho_schema_transformer - WARNING - customer_id resolution stubbed for 'JMD ENTERPRISES'. Actual Zoho Contacts API lookup needed before API submission.
+2026-03-12 23:23:17,697 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:23:17,697 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: AT/23-24/2733
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 013335.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (1 items)
+  Γ£à customer present: JMD ENTERPRISES
+  Γ£à date: 2024-02-15
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 80.5s
+
+######################################################################
+  INVOICE 7: Screenshot 2026-03-08 160824.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 160824.png
+======================================================================
+2026-03-12 23:23:17,712 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 160824.png
+2026-03-12 23:23:21,340 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 160824.png processed successfully.
+  Γ£à OCR SUCCESS
+     Line items extracted: 4
+     Raw text captured: True
+     Supplier: AKASH ENTERPRISES
+     Total: 1055
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 160824.png
+======================================================================
+2026-03-12 23:23:21,341 - utils.llm_mapper - INFO - Sending invoice S01 to LLM for Schema Mapping...
+2026-03-12 23:23:27,567 - utils.llm_mapper - INFO - Successfully mapped invoice via LLM.
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: S01
+     Customer:  Sampath singh
+     Line items: 4
+     Total:     1055.0
+     GST:       business_gst
+     GSTIN:     08HULMP2839A1AB
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 160824.png
+======================================================================
+2026-03-12 23:23:27,567 - utils.financial_validation - WARNING - VALIDATION_FAILED: 1 errors found for invoice 'S01'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (1):
+     ΓÇó Amount Consistency Failure: Sum of line items (2255.00) does not match Total Amount (1055.00).
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 160824.png
+======================================================================
+2026-03-12 23:23:27,567 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: S01
+2026-03-12 23:23:27,567 - utils.zoho_schema_transformer - WARNING - customer_id resolution stubbed for 'Sampath singh'. Actual Zoho Contacts API lookup needed before API submission.
+2026-03-12 23:23:27,567 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:23:27,567 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: S01
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 160824.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (4 items)
+  Γ£à customer present: Sampath singh
+  Γ£à date: 2023-01-11
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 90.3s
+
+######################################################################
+  INVOICE 8: Screenshot 2026-03-08 161306.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 161306.png
+======================================================================
+2026-03-12 23:23:27,589 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 161306.png
+2026-03-12 23:23:31,056 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 161306.png processed successfully.
+  Γ£à OCR SUCCESS
+     Line items extracted: 1
+     Raw text captured: True
+     Supplier: Ramandeep Kaur
+     Total: Rs. 2399.00
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 161306.png
+======================================================================
+2026-03-12 23:23:31,057 - utils.llm_mapper - INFO - Sending invoice 3980448704 to LLM for Schema Mapping...
+2026-03-12 23:23:34,666 - utils.llm_mapper - INFO - Successfully mapped invoice via LLM.
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: 3980448704
+     Customer:  Ramandeep Kaur
+     Line items: 1
+     Total:     2399.0
+     GST:       business_gst
+     GSTIN:     27AADCH3567M2Z4
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 161306.png
+======================================================================
+2026-03-12 23:23:34,667 - utils.financial_validation - WARNING - VALIDATION_FAILED: 1 errors found for invoice '3980448704'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (1):
+     ΓÇó Amount Consistency Failure: Sum of line items (2999.00) does not match Total Amount (2399.00).
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 161306.png
+======================================================================
+2026-03-12 23:23:34,667 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: 3980448704
+2026-03-12 23:23:34,667 - utils.zoho_schema_transformer - WARNING - customer_id resolution stubbed for 'Ramandeep Kaur'. Actual Zoho Contacts API lookup needed before API submission.
+2026-03-12 23:23:34,667 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:23:34,667 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: 3980448704
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 161306.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (1 items)
+  Γ£à customer present: Ramandeep Kaur
+  Γ£à date: 2019-01-06
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 97.4s
+
+######################################################################
+  INVOICE 9: Screenshot 2026-03-08 164719.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 164719.png
+======================================================================
+2026-03-12 23:23:34,691 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 164719.png
+2026-03-12 23:23:38,501 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 164719.png processed successfully.
+  Γ£à OCR SUCCESS
+     Line items extracted: 2
+     Raw text captured: True
+     Supplier: Amar Ujala Web Services Pvt Ltd
+     Total: 175.82
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 164719.png
+======================================================================
+2026-03-12 23:23:38,503 - utils.llm_mapper - INFO - Sending invoice EPR/2122/16502 to LLM for Schema Mapping...
+2026-03-12 23:23:42,110 - utils.llm_mapper - INFO - Successfully mapped invoice via LLM.
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: EPR/2122/16502
+     Customer:  αñê. αñ╕αÑîαñ░αñ¡
+     Line items: 1
+     Total:     175.82
+     GST:       consumer
+     GSTIN:     None
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 164719.png
+======================================================================
+2026-03-12 23:23:42,110 - utils.financial_validation - INFO - Financial validation passed for invoice 'EPR/2122/16502'.
+  Γ£à FINANCIAL VALIDATION PASSED (0 warnings)
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 164719.png
+======================================================================
+2026-03-12 23:23:42,111 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: EPR/2122/16502
+2026-03-12 23:23:42,111 - utils.zoho_schema_transformer - WARNING - customer_id resolution stubbed for 'αñê. αñ╕αÑîαñ░αñ¡'. Actual Zoho Contacts API lookup needed before API submission.
+2026-03-12 23:23:42,111 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:23:42,111 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: EPR/2122/16502
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 164719.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (1 items)
+  Γ£à customer present: αñê. αñ╕αÑîαñ░αñ¡
+  Γ£à date: 2021-10-13
+  Γ£à All line items have name/rate/quantity
+python : Traceback (most recent call last):
+At line:1 char:32
++ ... ONIOENCODING='utf-8'; python test_production_pipeline.py 2>&1 | Out-F ...
++                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "D:\Olive invoice automation\test_production_pipeline.py", line 364, in <module>
+    main()
+  File "D:\Olive invoice automation\test_production_pipeline.py", line 347, in main
+    result = test_single_invoice(filepath, idx, client)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Olive invoice automation\test_production_pipeline.py", line 257, in test_single_invoice
+    json.dump(mapped_data, f, indent=2, ensure_ascii=False)
+  File "C:\Users\Acer\AppData\Local\Programs\Python\Python312\Lib\json\__init__.py", line 180, in dump
+    fp.write(chunk)
+  File "C:\Users\Acer\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u0908' in position 1: character maps to <undefined>

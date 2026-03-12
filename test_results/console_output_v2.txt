@@ -1,0 +1,836 @@
+﻿python : D:\Olive invoice automation\utils\document_ai.py:59: SyntaxWarning: invalid escape sequence '\d'
+At line:1 char:32
++ ... ONIOENCODING='utf-8'; python test_production_pipeline.py 2>&1 | Out-F ...
++                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\Olive invoic...e sequence '\d':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  """
+
+ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+  OLIVE INVOICE AUTOMATION ΓÇö PRODUCTION PIPELINE TEST
+  Testing 9 invoices through 5 stages
+ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûê
+
+  Initializing Document AI client...
+  Γ£à Client ready.
+
+  Found 9 invoice files:
+    [1] Screenshot 2026-03-07 221907.png
+    [2] Screenshot 2026-03-08 002314.png
+    [3] Screenshot 2026-03-08 003133.png
+    [4] Screenshot 2026-03-08 005536.png
+    [5] Screenshot 2026-03-08 012341.png
+    [6] Screenshot 2026-03-08 013335.png
+    [7] Screenshot 2026-03-08 160824.png
+    [8] Screenshot 2026-03-08 161306.png
+    [9] Screenshot 2026-03-08 164719.png
+
+######################################################################
+  INVOICE 1: Screenshot 2026-03-07 221907.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-07 221907.png
+======================================================================
+2026-03-12 23:54:26,232 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-07 221907.png (mime=image/png)
+2026-03-12 23:54:26,236 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-07 221907.png
+2026-03-12 23:54:34,038 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-07 221907.png processed successfully.
+2026-03-12 23:54:34,041 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_tax_id' skipped (confidence=0.46 < 0.5)
+2026-03-12 23:54:34,041 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'invoice_type' skipped (confidence=0.43 < 0.5)
+2026-03-12 23:54:34,041 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_phone' skipped (confidence=0.41 < 0.5)
+2026-03-12 23:54:34,041 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'net_amount' skipped (confidence=0.30 < 0.5)
+2026-03-12 23:54:34,041 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'total_tax_amount' skipped (confidence=0.29 < 0.5)
+2026-03-12 23:54:34,043 - utils.document_ai - INFO - ENTITIES_EXTRACTED: 10 accepted, 5 skipped (low confidence), 4 line_items, GSTIN_valid=None
+  Γ£à OCR SUCCESS
+     Line items extracted: 4
+     Raw text captured: True
+     Supplier: SAN SOFTWARE
+     Total: 1988
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-07 221907.png
+======================================================================
+2026-03-12 23:54:34,044 - utils.llm_mapper - INFO - LLM_MAP_START: invoice '1043' (max_retries=2)
+2026-03-12 23:54:43,351 - utils.llm_mapper - WARNING - LLM_MAP_PASS1_ERRORS: invoice '1043' ΓÇö 1 issue(s):
+  ΓÇó Math mismatch: sum(qty*rate)=1988.26, with_tax=2346.15, declared_total=1988.00 (18.0% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.
+2026-03-12 23:54:43,352 - utils.llm_mapper - INFO - LLM_MAP_RETRY_1: invoice '1043'
+2026-03-12 23:54:53,480 - utils.llm_mapper - WARNING - LLM_MAP_RETRY_1_STILL_ERRORS: invoice '1043' ΓÇö 1 issue(s) remain
+2026-03-12 23:54:53,480 - utils.llm_mapper - INFO - LLM_MAP_RETRY_2: invoice '1043'
+2026-03-12 23:55:02,674 - utils.llm_mapper - WARNING - LLM_MAP_RETRY_2_STILL_ERRORS: invoice '1043' ΓÇö 1 issue(s) remain
+2026-03-12 23:55:02,675 - utils.llm_mapper - WARNING - LLM_MAP_BEST_EFFORT: invoice '1043' ΓÇö returning result after 2 retries with remaining errors: ['Math mismatch: sum(qty*rate)=1683.32, with_tax=1683.32, declared_total=1988.00 (15.3% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.']
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: 1043
+     Customer:  SIP & FLIP HEALTH MAGIC
+     Line items: 4
+     Total:     1988.0
+     GST:       business_gst
+     GSTIN:     33CAXKLYE2019
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-07 221907.png
+======================================================================
+2026-03-12 23:55:02,680 - utils.financial_validation - WARNING - VALIDATION_FAILED: 3 errors found for invoice '1043'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (3):
+     ΓÇó Amount Consistency Failure: Sum of line items (1683.32) does not match Total Amount (1988.00).
+     ΓÇó GSTIN Format Failure: '33CAXKLYE2019' is not a valid 15-char Indian GSTIN (format: ##AAAAA####A#Z#). Got 13 chars.
+     ΓÇó LLM Math Warning (unresolved after retries): Math mismatch: sum(qty*rate)=1683.32, with_tax=1683.32, declared_total=1988.00 (15.3% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-07 221907.png
+======================================================================
+2026-03-12 23:55:02,680 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: 1043
+CUSTOMER_RESOLVER: Invalid GSTIN format '33CAXKLYE2019' ΓÇö skipping lookup
+2026-03-12 23:55:02,687 - utils.zoho_schema_transformer - INFO - CUSTOMER_GSTIN_MISS: GSTIN '33CAXKLYE2019' not in mapping ΓÇö reason=invalid_gstin_format. Using customer_name fallback.
+2026-03-12 23:55:02,687 - utils.zoho_schema_transformer - WARNING - CUSTOMER_ID_STUB: 'SIP & FLIP HEALTH MAGIC' ΓÇö add GSTINΓåÆcustomer_id mapping to customer_mapping.json for automatic resolution.
+2026-03-12 23:55:02,687 - utils.zoho_schema_transformer - WARNING - Payload validation failed with 1 error(s): ["'gst_no' must be 15 characters, got 13"]
+2026-03-12 23:55:02,687 - utils.zoho_schema_transformer - ERROR - Zoho payload INVALID for invoice: 1043
+  Γ¥î ZOHO TRANSFORMATION FAILED (1 errors):
+     ΓÇó 'gst_no' must be 15 characters, got 13
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-07 221907.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (4 items)
+  Γ£à customer present: SIP & FLIP HEALTH MAGIC
+  Γ£à date: 2019-01-25
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 39.5s
+
+######################################################################
+  INVOICE 2: Screenshot 2026-03-08 002314.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 002314.png
+======================================================================
+2026-03-12 23:55:02,772 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 002314.png (mime=image/png)
+2026-03-12 23:55:02,774 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 002314.png
+2026-03-12 23:55:08,326 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 002314.png processed successfully.
+2026-03-12 23:55:08,327 - utils.document_ai - WARNING - GSTIN_INVALID: '29AACCT3705E000' does not match 15-char pattern. Storing raw but flagging for LLM correction.
+2026-03-12 23:55:08,327 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_address' skipped (confidence=0.46 < 0.5)
+2026-03-12 23:55:08,327 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'net_amount' skipped (confidence=0.24 < 0.5)
+2026-03-12 23:55:08,327 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'ship_to_name' skipped (confidence=0.10 < 0.5)
+2026-03-12 23:55:08,327 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='12MM**' (confidence=0.28)
+2026-03-12 23:55:08,327 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='1005' (confidence=0.14)
+2026-03-12 23:55:08,327 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'unit'='No' (confidence=0.39)
+2026-03-12 23:55:08,328 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='CGST' (confidence=0.25)
+2026-03-12 23:55:08,328 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'amount'='315' (confidence=0.48)
+2026-03-12 23:55:08,328 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='SGST' (confidence=0.18)
+2026-03-12 23:55:08,328 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'amount'='315' (confidence=0.21)
+2026-03-12 23:55:08,328 - utils.document_ai - INFO - ENTITIES_EXTRACTED: 10 accepted, 3 skipped (low confidence), 3 line_items, GSTIN_valid=False
+  Γ£à OCR SUCCESS
+     Line items extracted: 3
+     Raw text captured: True
+     Supplier: Kiran Enterprises
+     Total: 4130
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 002314.png
+======================================================================
+2026-03-12 23:55:08,328 - utils.llm_mapper - INFO - LLM_MAP_START: invoice 'SHB/456/20' (max_retries=2)
+2026-03-12 23:55:12,027 - utils.llm_mapper - INFO - LLM_MAP_PASS1_OK: invoice 'SHB/456/20' ΓÇö math check passed
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: SHB/456/20
+     Customer:  Kiran Enterprises
+     Line items: 1
+     Total:     4130.0
+     GST:       business_gst
+     GSTIN:     29AAFFC8126N1ZZ
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 002314.png
+======================================================================
+2026-03-12 23:55:12,027 - utils.financial_validation - WARNING - VALIDATION_FAILED: 1 errors found for invoice 'SHB/456/20'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (1):
+     ΓÇó Amount Consistency Failure: Sum of line items (4126.93) does not match Total Amount (4130.00).
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 002314.png
+======================================================================
+2026-03-12 23:55:12,027 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: SHB/456/20
+CUSTOMER_RESOLVER: GSTIN 29AAFFC8126N1ZZ not in mapping. Add it to customer_mapping.json with the Zoho customer_id.
+2026-03-12 23:55:12,029 - utils.zoho_schema_transformer - INFO - CUSTOMER_GSTIN_MISS: GSTIN '29AAFFC8126N1ZZ' not in mapping ΓÇö reason=gstin_not_in_mapping. Using customer_name fallback.
+2026-03-12 23:55:12,029 - utils.zoho_schema_transformer - WARNING - CUSTOMER_ID_STUB: 'Kiran Enterprises' ΓÇö add GSTINΓåÆcustomer_id mapping to customer_mapping.json for automatic resolution.
+2026-03-12 23:55:12,029 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:55:12,029 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: SHB/456/20
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 002314.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (1 items)
+  Γ£à customer present: Kiran Enterprises
+  Γ£à date: 2020-12-20
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 48.9s
+
+######################################################################
+  INVOICE 3: Screenshot 2026-03-08 003133.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 003133.png
+======================================================================
+2026-03-12 23:55:12,101 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 003133.png (mime=image/png)
+2026-03-12 23:55:12,103 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 003133.png
+2026-03-12 23:55:19,112 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 003133.png processed successfully.
+2026-03-12 23:55:19,113 - utils.document_ai - INFO - GSTIN_VALID: 24AAMCS8473N1ZI (confidence=0.85)
+2026-03-12 23:55:19,114 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_email' skipped (confidence=0.44 < 0.5)
+2026-03-12 23:55:19,114 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'receiver_address' skipped (confidence=0.39 < 0.5)
+2026-03-12 23:55:19,114 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'net_amount' skipped (confidence=0.32 < 0.5)
+2026-03-12 23:55:19,114 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'unit'='KGS' (confidence=0.30)
+2026-03-12 23:55:19,115 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='CGST' (confidence=0.19)
+2026-03-12 23:55:19,115 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'amount'='225' (confidence=0.36)
+2026-03-12 23:55:19,115 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'amount'='2974' (confidence=0.27)
+2026-03-12 23:55:19,115 - utils.document_ai - INFO - ENTITIES_EXTRACTED: 12 accepted, 3 skipped (low confidence), 3 line_items, GSTIN_valid=True
+  Γ£à OCR SUCCESS
+     Line items extracted: 3
+     Raw text captured: True
+     Supplier: Alpha Sales
+     Total: 2974
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 003133.png
+======================================================================
+2026-03-12 23:55:19,116 - utils.llm_mapper - INFO - LLM_MAP_START: invoice 'TI/BVN/1953' (max_retries=2)
+2026-03-12 23:55:23,793 - utils.llm_mapper - INFO - LLM_MAP_PASS1_OK: invoice 'TI/BVN/1953' ΓÇö math check passed
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: TI/BVN/1953
+     Customer:  GAJENDRA STEEL
+     Line items: 1
+     Total:     2974.0
+     GST:       business_gst
+     GSTIN:     24AAIFG0955A1ZW
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 003133.png
+======================================================================
+2026-03-12 23:55:23,794 - utils.financial_validation - INFO - Financial validation passed for invoice 'TI/BVN/1953'.
+  Γ£à FINANCIAL VALIDATION PASSED (0 warnings)
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 003133.png
+======================================================================
+2026-03-12 23:55:23,794 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: TI/BVN/1953
+CUSTOMER_RESOLVER: GSTIN 24AAIFG0955A1ZW not in mapping. Add it to customer_mapping.json with the Zoho customer_id.
+2026-03-12 23:55:23,794 - utils.zoho_schema_transformer - INFO - CUSTOMER_GSTIN_MISS: GSTIN '24AAIFG0955A1ZW' not in mapping ΓÇö reason=gstin_not_in_mapping. Using customer_name fallback.
+2026-03-12 23:55:23,794 - utils.zoho_schema_transformer - WARNING - CUSTOMER_ID_STUB: 'GAJENDRA STEEL' ΓÇö add GSTINΓåÆcustomer_id mapping to customer_mapping.json for automatic resolution.
+2026-03-12 23:55:23,794 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:55:23,794 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: TI/BVN/1953
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 003133.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (1 items)
+  Γ£à customer present: GAJENDRA STEEL
+  Γ£à date: 2021-01-23
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 60.6s
+
+######################################################################
+  INVOICE 4: Screenshot 2026-03-08 005536.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 005536.png
+======================================================================
+2026-03-12 23:55:23,882 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 005536.png (mime=image/png)
+2026-03-12 23:55:23,884 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 005536.png
+2026-03-12 23:55:29,720 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 005536.png processed successfully.
+2026-03-12 23:55:29,720 - utils.document_ai - INFO - GSTIN_VALID: 33AAJFV4814A1ZJ (confidence=0.88)
+2026-03-12 23:55:29,720 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'total_tax_amount' skipped (confidence=0.49 < 0.5)
+2026-03-12 23:55:29,720 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_address' skipped (confidence=0.44 < 0.5)
+2026-03-12 23:55:29,720 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'net_amount' skipped (confidence=0.38 < 0.5)
+2026-03-12 23:55:29,720 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'receiver_address' skipped (confidence=0.39 < 0.5)
+2026-03-12 23:55:29,720 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'receiver_name' skipped (confidence=0.28 < 0.5)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'remit_to_name' skipped (confidence=0.26 < 0.5)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'purchase_order' skipped (confidence=0.20 < 0.5)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='26' (confidence=0.02)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'product_code'='031' (confidence=0.25)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'purchase_order'='031WARP' (confidence=0.01)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='2' (confidence=0.39)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='39S V THARA' (confidence=0.45)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'purchase_order'='998821' (confidence=0.39)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='3' (confidence=0.46)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'unit_price'='26' (confidence=0.06)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'product_code'='026' (confidence=0.22)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'unit_price'='31' (confidence=0.05)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'unit_price'='31' (confidence=0.06)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='8' (confidence=0.48)
+2026-03-12 23:55:29,721 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'product_code'='031' (confidence=0.29)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'purchase_order'='998821' (confidence=0.48)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='9' (confidence=0.46)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='39S OLIVE' (confidence=0.40)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'unit_price'='31' (confidence=0.04)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='39S BLACK' (confidence=0.46)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'unit_price'='26' (confidence=0.07)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'purchase_order'='998821' (confidence=0.50)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='39S AJANTHA' (confidence=0.36)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'unit_price'='26' (confidence=0.04)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'product_code'='028' (confidence=0.22)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='28/112P #028 WEFT' (confidence=0.12)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'product_code'='028' (confidence=0.20)
+2026-03-12 23:55:29,722 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='28/114 P #028 WEFT' (confidence=0.15)
+2026-03-12 23:55:29,722 - utils.document_ai - INFO - ENTITIES_EXTRACTED: 21 accepted, 7 skipped (low confidence), 14 line_items, GSTIN_valid=True
+  Γ£à OCR SUCCESS
+     Line items extracted: 14
+     Raw text captured: True
+     Supplier: Vivin Tex
+     Total: 986267
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 005536.png
+======================================================================
+2026-03-12 23:55:29,722 - utils.llm_mapper - INFO - LLM_MAP_START: invoice 'VYZ/22-23/G-113' (max_retries=2)
+2026-03-12 23:55:39,360 - utils.llm_mapper - WARNING - LLM_MAP_PASS1_ERRORS: invoice 'VYZ/22-23/G-113' ΓÇö 2 issue(s):
+  ΓÇó Items with Item Price=0 found: ['39S V THARA', '39S VS GREY', '39S U WHITE', '39S BLUE MAYIL']. These are almost certainly extraction errors ΓÇö re-read raw_text for the actual rate.
+  ΓÇó Math mismatch: sum(qty*rate)=1332.00, with_tax=1332.00, declared_total=986267.00 (99.9% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.
+2026-03-12 23:55:39,360 - utils.llm_mapper - INFO - LLM_MAP_RETRY_1: invoice 'VYZ/22-23/G-113'
+2026-03-12 23:55:51,532 - utils.llm_mapper - WARNING - LLM_MAP_RETRY_1_STILL_ERRORS: invoice 'VYZ/22-23/G-113' ΓÇö 1 issue(s) remain
+2026-03-12 23:55:51,532 - utils.llm_mapper - INFO - LLM_MAP_RETRY_2: invoice 'VYZ/22-23/G-113'
+2026-03-12 23:56:02,298 - utils.llm_mapper - WARNING - LLM_MAP_RETRY_2_STILL_ERRORS: invoice 'VYZ/22-23/G-113' ΓÇö 1 issue(s) remain
+2026-03-12 23:56:02,298 - utils.llm_mapper - WARNING - LLM_MAP_BEST_EFFORT: invoice 'VYZ/22-23/G-113' ΓÇö returning result after 2 retries with remaining errors: ['Math mismatch: sum(qty*rate)=30527316.62, with_tax=30527316.62, declared_total=986267.00 (2995.2% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.']
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: VYZ/22-23/G-113
+     Customer:  ZAINULABDIN TEXTILES (MFG) PVT LTD
+     Line items: 10
+     Total:     986267.0
+     GST:       business_gst
+     GSTIN:     33AABCZ4537H1ZB
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 005536.png
+======================================================================
+2026-03-12 23:56:02,298 - utils.financial_validation - WARNING - VALIDATION_FAILED: 2 errors found for invoice 'VYZ/22-23/G-113'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (2):
+     ΓÇó Amount Consistency Failure: Sum of line items (30527316.62) does not match Total Amount (986267.00).
+     ΓÇó LLM Math Warning (unresolved after retries): Math mismatch: sum(qty*rate)=30527316.62, with_tax=30527316.62, declared_total=986267.00 (2995.2% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 005536.png
+======================================================================
+2026-03-12 23:56:02,299 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: VYZ/22-23/G-113
+CUSTOMER_RESOLVER: GSTIN 33AABCZ4537H1ZB not in mapping. Add it to customer_mapping.json with the Zoho customer_id.
+2026-03-12 23:56:02,299 - utils.zoho_schema_transformer - INFO - CUSTOMER_GSTIN_MISS: GSTIN '33AABCZ4537H1ZB' not in mapping ΓÇö reason=gstin_not_in_mapping. Using customer_name fallback.
+2026-03-12 23:56:02,299 - utils.zoho_schema_transformer - WARNING - CUSTOMER_ID_STUB: 'ZAINULABDIN TEXTILES (MFG) PVT LTD' ΓÇö add GSTINΓåÆcustomer_id mapping to customer_mapping.json for automatic resolution.
+2026-03-12 23:56:02,299 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:56:02,299 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: VYZ/22-23/G-113
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 005536.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (10 items)
+  Γ£à customer present: ZAINULABDIN TEXTILES (MFG) PVT LTD
+  Γ£à date: 2022-06-04
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 99.2s
+
+######################################################################
+  INVOICE 5: Screenshot 2026-03-08 012341.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 012341.png
+======================================================================
+2026-03-12 23:56:02,354 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 012341.png (mime=image/png)
+2026-03-12 23:56:02,355 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 012341.png
+2026-03-12 23:56:06,085 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 012341.png processed successfully.
+2026-03-12 23:56:06,085 - utils.document_ai - WARNING - GSTIN_INVALID: '24ASASASAS1Z2' does not match 15-char pattern. Storing raw but flagging for LLM correction.
+2026-03-12 23:56:06,085 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'invoice_type' skipped (confidence=0.43 < 0.5)
+2026-03-12 23:56:06,085 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'freight_amount' skipped (confidence=0.39 < 0.5)
+2026-03-12 23:56:06,085 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'payment_terms' skipped (confidence=0.16 < 0.5)
+2026-03-12 23:56:06,085 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='Test Product' (confidence=0.31)
+2026-03-12 23:56:06,086 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='Test Product' (confidence=0.46)
+2026-03-12 23:56:06,086 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='Product Name' (confidence=0.21)
+2026-03-12 23:56:06,086 - utils.document_ai - INFO - ENTITIES_EXTRACTED: 11 accepted, 3 skipped (low confidence), 4 line_items, GSTIN_valid=False
+  Γ£à OCR SUCCESS
+     Line items extracted: 4
+     Raw text captured: True
+     Supplier: None
+     Total: 103743
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 012341.png
+======================================================================
+2026-03-12 23:56:06,087 - utils.llm_mapper - INFO - LLM_MAP_START: invoice 'T-0001/2023-2024' (max_retries=2)
+2026-03-12 23:56:10,392 - utils.llm_mapper - INFO - LLM_MAP_PASS1_OK: invoice 'T-0001/2023-2024' ΓÇö math check passed
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: T-0001/2023-2024
+     Customer:  Jenish
+     Line items: 4
+     Total:     103743.0
+     GST:       business_gst
+     GSTIN:     01ASASASASAS1ZX
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 012341.png
+======================================================================
+2026-03-12 23:56:10,392 - utils.financial_validation - WARNING - VALIDATION_FAILED: 2 errors found for invoice 'T-0001/2023-2024'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (2):
+     ΓÇó Amount Consistency Failure: Sum of line items (105105.00) does not match Total Amount (103743.00).
+     ΓÇó GSTIN Format Failure: '01ASASASASAS1ZX' is not a valid 15-char Indian GSTIN (format: ##AAAAA####A#Z#). Got 15 chars.
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 012341.png
+======================================================================
+2026-03-12 23:56:10,392 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: T-0001/2023-2024
+CUSTOMER_RESOLVER: Invalid GSTIN format '01ASASASASAS1ZX' ΓÇö skipping lookup
+2026-03-12 23:56:10,393 - utils.zoho_schema_transformer - INFO - CUSTOMER_GSTIN_MISS: GSTIN '01ASASASASAS1ZX' not in mapping ΓÇö reason=invalid_gstin_format. Using customer_name fallback.
+2026-03-12 23:56:10,393 - utils.zoho_schema_transformer - WARNING - CUSTOMER_ID_STUB: 'Jenish' ΓÇö add GSTINΓåÆcustomer_id mapping to customer_mapping.json for automatic resolution.
+2026-03-12 23:56:10,393 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:56:10,393 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: T-0001/2023-2024
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 012341.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (4 items)
+  Γ£à customer present: Jenish
+  Γ£à date: 2023-06-25
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 107.2s
+
+######################################################################
+  INVOICE 6: Screenshot 2026-03-08 013335.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 013335.png
+======================================================================
+2026-03-12 23:56:10,471 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 013335.png (mime=image/png)
+2026-03-12 23:56:10,472 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 013335.png
+2026-03-12 23:56:14,170 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 013335.png processed successfully.
+2026-03-12 23:56:14,172 - utils.document_ai - INFO - GSTIN_VALID: 08CDTPK0701L1ZB (confidence=0.89)
+2026-03-12 23:56:14,172 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_address' skipped (confidence=0.48 < 0.5)
+2026-03-12 23:56:14,173 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'invoice_type' skipped (confidence=0.47 < 0.5)
+2026-03-12 23:56:14,173 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_email' skipped (confidence=0.46 < 0.5)
+2026-03-12 23:56:14,173 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'net_amount' skipped (confidence=0.39 < 0.5)
+2026-03-12 23:56:14,173 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'receiver_address' skipped (confidence=0.38 < 0.5)
+2026-03-12 23:56:14,173 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_phone' skipped (confidence=0.38 < 0.5)
+2026-03-12 23:56:14,173 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'total_tax_amount' skipped (confidence=0.38 < 0.5)
+2026-03-12 23:56:14,173 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'ship_to_address' skipped (confidence=0.35 < 0.5)
+2026-03-12 23:56:14,173 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'description'='1. HSN-2523) CEMENT' (confidence=0.34)
+2026-03-12 23:56:14,175 - utils.document_ai - INFO - ENTITIES_EXTRACTED: 8 accepted, 8 skipped (low confidence), 1 line_items, GSTIN_valid=True
+  Γ£à OCR SUCCESS
+     Line items extracted: 1
+     Raw text captured: True
+     Supplier: Ambika Traders.
+     Total: 56250
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 013335.png
+======================================================================
+2026-03-12 23:56:14,176 - utils.llm_mapper - INFO - LLM_MAP_START: invoice 'AT/23-24/2733' (max_retries=2)
+2026-03-12 23:56:48,632 - utils.llm_mapper - WARNING - LLM_MAP_PASS1_ERRORS: invoice 'AT/23-24/2733' ΓÇö 1 issue(s):
+  ΓÇó Math mismatch: sum(qty*rate)=43945.50, with_tax=43945.50, declared_total=56250.00 (21.9% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.
+2026-03-12 23:56:48,632 - utils.llm_mapper - INFO - LLM_MAP_RETRY_1: invoice 'AT/23-24/2733'
+2026-03-12 23:56:52,116 - utils.llm_mapper - INFO - LLM_MAP_RETRY_1_OK: invoice 'AT/23-24/2733' ΓÇö math check passed after correction
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: AT/23-24/2733
+     Customer:  JMD ENTERPRISES, DUNGARPUR
+     Line items: 1
+     Total:     56250.0
+     GST:       business_gst
+     GSTIN:     08BJYPR4499A1ZF
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 013335.png
+======================================================================
+2026-03-12 23:56:52,116 - utils.financial_validation - INFO - Financial validation passed for invoice 'AT/23-24/2733'.
+  Γ£à FINANCIAL VALIDATION PASSED (0 warnings)
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 013335.png
+======================================================================
+2026-03-12 23:56:52,116 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: AT/23-24/2733
+CUSTOMER_RESOLVER: GSTIN 08BJYPR4499A1ZF not in mapping. Add it to customer_mapping.json with the Zoho customer_id.
+2026-03-12 23:56:52,117 - utils.zoho_schema_transformer - INFO - CUSTOMER_GSTIN_MISS: GSTIN '08BJYPR4499A1ZF' not in mapping ΓÇö reason=gstin_not_in_mapping. Using customer_name fallback.
+2026-03-12 23:56:52,118 - utils.zoho_schema_transformer - WARNING - CUSTOMER_ID_STUB: 'JMD ENTERPRISES, DUNGARPUR' ΓÇö add GSTINΓåÆcustomer_id mapping to customer_mapping.json for automatic resolution.
+2026-03-12 23:56:52,118 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:56:52,118 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: AT/23-24/2733
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 013335.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (1 items)
+  Γ£à customer present: JMD ENTERPRISES, DUNGARPUR
+  Γ£à date: 2024-02-15
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 149.0s
+
+######################################################################
+  INVOICE 7: Screenshot 2026-03-08 160824.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 160824.png
+======================================================================
+2026-03-12 23:56:52,192 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 160824.png (mime=image/png)
+2026-03-12 23:56:52,194 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 160824.png
+2026-03-12 23:56:56,061 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 160824.png processed successfully.
+2026-03-12 23:56:56,061 - utils.document_ai - INFO - GSTIN_VALID: 08AALCR2857A1ZD (confidence=0.89)
+2026-03-12 23:56:56,062 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'invoice_type' skipped (confidence=0.45 < 0.5)
+2026-03-12 23:56:56,062 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'total_tax_amount' skipped (confidence=0.43 < 0.5)
+2026-03-12 23:56:56,062 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'receiver_address' skipped (confidence=0.38 < 0.5)
+2026-03-12 23:56:56,062 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_email' skipped (confidence=0.37 < 0.5)
+2026-03-12 23:56:56,062 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'ship_to_address' skipped (confidence=0.35 < 0.5)
+2026-03-12 23:56:56,062 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'remit_to_name' skipped (confidence=0.31 < 0.5)
+2026-03-12 23:56:56,062 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'payment_terms' skipped (confidence=0.18 < 0.5)
+2026-03-12 23:56:56,062 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='5 KG' (confidence=0.14)
+2026-03-12 23:56:56,062 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='10 KG' (confidence=0.23)
+2026-03-12 23:56:56,062 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='5 KG' (confidence=0.21)
+2026-03-12 23:56:56,063 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='2020' (confidence=0.45)
+2026-03-12 23:56:56,063 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'unit_price'='55' (confidence=0.09)
+2026-03-12 23:56:56,063 - utils.document_ai - INFO - ENTITIES_EXTRACTED: 13 accepted, 7 skipped (low confidence), 4 line_items, GSTIN_valid=True
+  Γ£à OCR SUCCESS
+     Line items extracted: 4
+     Raw text captured: True
+     Supplier: AKASH ENTERPRISES
+     Total: 1055
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 160824.png
+======================================================================
+2026-03-12 23:56:56,066 - utils.llm_mapper - INFO - LLM_MAP_START: invoice 'S01' (max_retries=2)
+2026-03-12 23:57:05,282 - utils.llm_mapper - WARNING - LLM_MAP_PASS1_ERRORS: invoice 'S01' ΓÇö 1 issue(s):
+  ΓÇó Math mismatch: sum(qty*rate)=2200.00, with_tax=2200.00, declared_total=1055.00 (108.5% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.
+2026-03-12 23:57:05,282 - utils.llm_mapper - INFO - LLM_MAP_RETRY_1: invoice 'S01'
+2026-03-12 23:57:10,964 - utils.llm_mapper - WARNING - LLM_MAP_RETRY_1_STILL_ERRORS: invoice 'S01' ΓÇö 1 issue(s) remain
+2026-03-12 23:57:10,966 - utils.llm_mapper - INFO - LLM_MAP_RETRY_2: invoice 'S01'
+2026-03-12 23:57:16,600 - utils.llm_mapper - WARNING - LLM_MAP_RETRY_2_STILL_ERRORS: invoice 'S01' ΓÇö 1 issue(s) remain
+2026-03-12 23:57:16,600 - utils.llm_mapper - WARNING - LLM_MAP_BEST_EFFORT: invoice 'S01' ΓÇö returning result after 2 retries with remaining errors: ['Math mismatch: sum(qty*rate)=2200.00, with_tax=2200.00, declared_total=1055.00 (108.5% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.']
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: S01
+     Customer:  Sampath singh
+     Line items: 4
+     Total:     1055.0
+     GST:       business_gst
+     GSTIN:     08HULMP2839A1AB
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 160824.png
+======================================================================
+2026-03-12 23:57:16,601 - utils.financial_validation - WARNING - VALIDATION_FAILED: 3 errors found for invoice 'S01'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (3):
+     ΓÇó Amount Consistency Failure: Sum of line items (2200.00) does not match Total Amount (1055.00).
+     ΓÇó GSTIN Format Failure: '08HULMP2839A1AB' is not a valid 15-char Indian GSTIN (format: ##AAAAA####A#Z#). Got 15 chars.
+     ΓÇó LLM Math Warning (unresolved after retries): Math mismatch: sum(qty*rate)=2200.00, with_tax=2200.00, declared_total=1055.00 (108.5% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 160824.png
+======================================================================
+2026-03-12 23:57:16,601 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: S01
+CUSTOMER_RESOLVER: Invalid GSTIN format '08HULMP2839A1AB' ΓÇö skipping lookup
+2026-03-12 23:57:16,601 - utils.zoho_schema_transformer - INFO - CUSTOMER_GSTIN_MISS: GSTIN '08HULMP2839A1AB' not in mapping ΓÇö reason=invalid_gstin_format. Using customer_name fallback.
+2026-03-12 23:57:16,601 - utils.zoho_schema_transformer - WARNING - CUSTOMER_ID_STUB: 'Sampath singh' ΓÇö add GSTINΓåÆcustomer_id mapping to customer_mapping.json for automatic resolution.
+2026-03-12 23:57:16,601 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:57:16,601 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: S01
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 160824.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (4 items)
+  Γ£à customer present: Sampath singh
+  Γ£à date: 2023-01-11
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 173.5s
+
+######################################################################
+  INVOICE 8: Screenshot 2026-03-08 161306.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 161306.png
+======================================================================
+2026-03-12 23:57:16,662 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 161306.png (mime=image/png)
+2026-03-12 23:57:16,664 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 161306.png
+2026-03-12 23:57:20,250 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 161306.png processed successfully.
+2026-03-12 23:57:20,250 - utils.document_ai - INFO - GSTIN_VALID: 27AADCH3567M2Z4 (confidence=0.85)
+2026-03-12 23:57:20,250 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_website' skipped (confidence=0.50 < 0.5)
+2026-03-12 23:57:20,250 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'invoice_type' skipped (confidence=0.48 < 0.5)
+2026-03-12 23:57:20,251 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_email' skipped (confidence=0.44 < 0.5)
+2026-03-12 23:57:20,251 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_phone' skipped (confidence=0.43 < 0.5)
+2026-03-12 23:57:20,251 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_address' skipped (confidence=0.38 < 0.5)
+2026-03-12 23:57:20,251 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'ship_to_address' skipped (confidence=0.35 < 0.5)
+2026-03-12 23:57:20,251 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'purchase_order' skipped (confidence=0.27 < 0.5)
+2026-03-12 23:57:20,251 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'net_amount' skipped (confidence=0.18 < 0.5)
+2026-03-12 23:57:20,251 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'currency' skipped (confidence=0.12 < 0.5)
+2026-03-12 23:57:20,251 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'product_code'='0707203004003' (confidence=0.40)
+2026-03-12 23:57:20,251 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='1' (confidence=0.48)
+2026-03-12 23:57:20,251 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'amount'='2141.96' (confidence=0.13)
+2026-03-12 23:57:20,251 - utils.document_ai - INFO - ENTITIES_EXTRACTED: 7 accepted, 9 skipped (low confidence), 2 line_items, GSTIN_valid=True
+  Γ£à OCR SUCCESS
+     Line items extracted: 2
+     Raw text captured: True
+     Supplier: Ramandeep Kaur
+     Total: Rs. 2399.00
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 161306.png
+======================================================================
+2026-03-12 23:57:20,253 - utils.llm_mapper - INFO - LLM_MAP_START: invoice '3980448704' (max_retries=2)
+2026-03-12 23:57:24,295 - utils.llm_mapper - WARNING - LLM_MAP_PASS1_ERRORS: invoice '3980448704' ΓÇö 1 issue(s):
+  ΓÇó Math mismatch: sum(qty*rate)=2999.00, with_tax=2999.00, declared_total=2399.00 (25.0% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.
+2026-03-12 23:57:24,295 - utils.llm_mapper - INFO - LLM_MAP_RETRY_1: invoice '3980448704'
+2026-03-12 23:57:27,914 - utils.llm_mapper - WARNING - LLM_MAP_RETRY_1_STILL_ERRORS: invoice '3980448704' ΓÇö 1 issue(s) remain
+2026-03-12 23:57:27,914 - utils.llm_mapper - INFO - LLM_MAP_RETRY_2: invoice '3980448704'
+2026-03-12 23:57:31,401 - utils.llm_mapper - WARNING - LLM_MAP_RETRY_2_STILL_ERRORS: invoice '3980448704' ΓÇö 1 issue(s) remain
+2026-03-12 23:57:31,401 - utils.llm_mapper - WARNING - LLM_MAP_BEST_EFFORT: invoice '3980448704' ΓÇö returning result after 2 retries with remaining errors: ['Math mismatch: sum(qty*rate)=2999.00, with_tax=2999.00, declared_total=2399.00 (25.0% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.']
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: 3980448704
+     Customer:  Ramandeep Kaur
+     Line items: 1
+     Total:     2399.0
+     GST:       business_gst
+     GSTIN:     27AADCH3567M2Z4
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 161306.png
+======================================================================
+2026-03-12 23:57:31,401 - utils.financial_validation - WARNING - VALIDATION_FAILED: 2 errors found for invoice '3980448704'
+  ΓÜá∩╕Å  FINANCIAL WARNINGS (2):
+     ΓÇó Amount Consistency Failure: Sum of line items (2999.00) does not match Total Amount (2399.00).
+     ΓÇó LLM Math Warning (unresolved after retries): Math mismatch: sum(qty*rate)=2999.00, with_tax=2999.00, declared_total=2399.00 (25.0% off). Re-examine raw_text and correct line item rates/quantities. Do NOT change total_amount ΓÇö fix the line items.
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 161306.png
+======================================================================
+2026-03-12 23:57:31,401 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: 3980448704
+CUSTOMER_RESOLVER: GSTIN 27AADCH3567M2Z4 not in mapping. Add it to customer_mapping.json with the Zoho customer_id.
+2026-03-12 23:57:31,403 - utils.zoho_schema_transformer - INFO - CUSTOMER_GSTIN_MISS: GSTIN '27AADCH3567M2Z4' not in mapping ΓÇö reason=gstin_not_in_mapping. Using customer_name fallback.
+2026-03-12 23:57:31,403 - utils.zoho_schema_transformer - WARNING - CUSTOMER_ID_STUB: 'Ramandeep Kaur' ΓÇö add GSTINΓåÆcustomer_id mapping to customer_mapping.json for automatic resolution.
+2026-03-12 23:57:31,403 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:57:31,403 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: 3980448704
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 161306.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (1 items)
+  Γ£à customer present: Ramandeep Kaur
+  Γ£à date: 2010-01-06
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 188.3s
+
+######################################################################
+  INVOICE 9: Screenshot 2026-03-08 164719.png
+######################################################################
+
+======================================================================
+  STAGE 1: Document AI OCR Extraction
+  Invoice: Screenshot 2026-03-08 164719.png
+======================================================================
+2026-03-12 23:57:31,462 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 164719.png (mime=image/png)
+2026-03-12 23:57:31,465 - utils.document_ai - INFO - OCR_START: Processing Screenshot 2026-03-08 164719.png
+2026-03-12 23:57:36,149 - utils.document_ai - INFO - OCR_SUCCESS: Screenshot 2026-03-08 164719.png processed successfully.
+2026-03-12 23:57:36,151 - utils.document_ai - INFO - GSTIN_VALID: 09AANCA0200G1Z5 (confidence=0.88)
+2026-03-12 23:57:36,151 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'net_amount' skipped (confidence=0.47 < 0.5)
+2026-03-12 23:57:36,151 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_email' skipped (confidence=0.38 < 0.5)
+2026-03-12 23:57:36,151 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'supplier_website' skipped (confidence=0.27 < 0.5)
+2026-03-12 23:57:36,151 - utils.document_ai - WARNING - LOW_CONF_SKIP: entity 'receiver_name' skipped (confidence=0.12 < 0.5)
+2026-03-12 23:57:36,152 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'quantity'='1' (confidence=0.14)
+2026-03-12 23:57:36,152 - utils.document_ai - WARNING - LINE_ITEM_LOW_CONF: 'product_code'='999799' (confidence=0.34)
+2026-03-12 23:57:36,152 - utils.document_ai - INFO - ENTITIES_EXTRACTED: 11 accepted, 4 skipped (low confidence), 2 line_items, GSTIN_valid=True
+  Γ£à OCR SUCCESS
+     Line items extracted: 2
+     Raw text captured: True
+     Supplier: Amar Ujala Web Services Pvt Ltd
+     Total: 175.82
+
+======================================================================
+  STAGE 2: LLM (GPT-4o) Schema Mapping
+  Invoice: Screenshot 2026-03-08 164719.png
+======================================================================
+2026-03-12 23:57:36,153 - utils.llm_mapper - INFO - LLM_MAP_START: invoice 'EPR/2122/16502' (max_retries=2)
+2026-03-12 23:57:39,693 - utils.llm_mapper - INFO - LLM_MAP_PASS1_OK: invoice 'EPR/2122/16502' ΓÇö math check passed
+  Γ£à LLM MAPPING SUCCESS
+     Invoice #: EPR/2122/16502
+     Customer:  αñê. αñ╕αÑîαñ░αñ¡
+     Line items: 1
+     Total:     175.82
+     GST:       consumer
+     GSTIN:     None
+
+======================================================================
+  STAGE 3: Financial Validation Rules
+  Invoice: Screenshot 2026-03-08 164719.png
+======================================================================
+2026-03-12 23:57:39,693 - utils.financial_validation - INFO - Financial validation passed for invoice 'EPR/2122/16502'.
+  Γ£à FINANCIAL VALIDATION PASSED (0 warnings)
+
+======================================================================
+  STAGE 4: Zoho Schema Transformation
+  Invoice: Screenshot 2026-03-08 164719.png
+======================================================================
+2026-03-12 23:57:39,693 - utils.zoho_schema_transformer - INFO - Building Zoho payload for invoice: EPR/2122/16502
+2026-03-12 23:57:39,694 - utils.zoho_schema_transformer - INFO - CUSTOMER_GSTIN_MISS: GSTIN '' not in mapping ΓÇö reason=no_gstin_provided. Using customer_name fallback.
+2026-03-12 23:57:39,694 - utils.zoho_schema_transformer - WARNING - CUSTOMER_ID_STUB: 'αñê. αñ╕αÑîαñ░αñ¡' ΓÇö add GSTINΓåÆcustomer_id mapping to customer_mapping.json for automatic resolution.
+2026-03-12 23:57:39,694 - utils.zoho_schema_transformer - INFO - Payload validation passed.
+2026-03-12 23:57:39,694 - utils.zoho_schema_transformer - INFO - Zoho payload ready for invoice: EPR/2122/16502
+  Γ£à ZOHO TRANSFORMATION PASSED
+
+======================================================================
+  STAGE 5: Final Zoho Payload Audit
+  Invoice: Screenshot 2026-03-08 164719.png
+======================================================================
+  Γ£à No forbidden fields in payload
+  Γ£à line_items present (1 items)
+  Γ£à customer present: αñê. αñ╕αÑîαñ░αñ¡
+  Γ£à date: 2021-10-13
+  Γ£à All line items have name/rate/quantity
+
+  ΓÅ▒∩╕Å  Time elapsed: 196.5s
+
+
+======================================================================
+  PRODUCTION TEST SUMMARY ΓÇö 9 invoices
+======================================================================
+
+  Γ£à Fully Passed:  8/9
+  ΓÜá∩╕Å  Warnings:     0/9
+  Γ¥î Failed:        1/9
+
+  Γ¥î [1] Screenshot 2026-03-07 221907.png
+      Status: FAILED_AT_ZOHO_VALIDATION
+      Γ£à 1_ocr: PASS
+      Γ£à 2_llm: PASS ΓåÆ 1043
+      ΓÜá∩╕Å 3_financial: WARNINGS (3 issues)
+      Γ¥î 4_zoho_transform: FAIL (1 issues)
+      Γ£à 5_audit: PASS
+
+  Γ£à [2] Screenshot 2026-03-08 002314.png
+      Status: ALL_STAGES_PASSED
+      Γ£à 1_ocr: PASS
+      Γ£à 2_llm: PASS ΓåÆ SHB/456/20
+      ΓÜá∩╕Å 3_financial: WARNINGS (1 issues)
+      Γ£à 4_zoho_transform: PASS
+      Γ£à 5_audit: PASS
+
+  Γ£à [3] Screenshot 2026-03-08 003133.png
+      Status: ALL_STAGES_PASSED
+      Γ£à 1_ocr: PASS
+      Γ£à 2_llm: PASS ΓåÆ TI/BVN/1953
+      Γ£à 3_financial: PASS
+      Γ£à 4_zoho_transform: PASS
+      Γ£à 5_audit: PASS
+
+  Γ£à [4] Screenshot 2026-03-08 005536.png
+      Status: ALL_STAGES_PASSED
+      Γ£à 1_ocr: PASS
+      Γ£à 2_llm: PASS ΓåÆ VYZ/22-23/G-113
+      ΓÜá∩╕Å 3_financial: WARNINGS (2 issues)
+      Γ£à 4_zoho_transform: PASS
+      Γ£à 5_audit: PASS
+
+  Γ£à [5] Screenshot 2026-03-08 012341.png
+      Status: ALL_STAGES_PASSED
+      Γ£à 1_ocr: PASS
+      Γ£à 2_llm: PASS ΓåÆ T-0001/2023-2024
+      ΓÜá∩╕Å 3_financial: WARNINGS (2 issues)
+      Γ£à 4_zoho_transform: PASS
+      Γ£à 5_audit: PASS
+
+  Γ£à [6] Screenshot 2026-03-08 013335.png
+      Status: ALL_STAGES_PASSED
+      Γ£à 1_ocr: PASS
+      Γ£à 2_llm: PASS ΓåÆ AT/23-24/2733
+      Γ£à 3_financial: PASS
+      Γ£à 4_zoho_transform: PASS
+      Γ£à 5_audit: PASS
+
+  Γ£à [7] Screenshot 2026-03-08 160824.png
+      Status: ALL_STAGES_PASSED
+      Γ£à 1_ocr: PASS
+      Γ£à 2_llm: PASS ΓåÆ S01
+      ΓÜá∩╕Å 3_financial: WARNINGS (3 issues)
+      Γ£à 4_zoho_transform: PASS
+      Γ£à 5_audit: PASS
+
+  Γ£à [8] Screenshot 2026-03-08 161306.png
+      Status: ALL_STAGES_PASSED
+      Γ£à 1_ocr: PASS
+      Γ£à 2_llm: PASS ΓåÆ 3980448704
+      ΓÜá∩╕Å 3_financial: WARNINGS (2 issues)
+      Γ£à 4_zoho_transform: PASS
+      Γ£à 5_audit: PASS
+
+  Γ£à [9] Screenshot 2026-03-08 164719.png
+      Status: ALL_STAGES_PASSED
+      Γ£à 1_ocr: PASS
+      Γ£à 2_llm: PASS ΓåÆ EPR/2122/16502
+      Γ£à 3_financial: PASS
+      Γ£à 4_zoho_transform: PASS
+      Γ£à 5_audit: PASS
+
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  FAILURE DETAILS
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  Γ¥î Screenshot 2026-03-07 221907.png:
+     ΓÇó 'gst_no' must be 15 characters, got 13
+
+  Total time: 196.6s (21.8s per invoice)
+  Full report saved to: d:\Olive invoice automation\test_results\test_report.json
+  Individual outputs saved to: d:\Olive invoice automation\test_results\

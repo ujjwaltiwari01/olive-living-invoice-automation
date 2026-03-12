@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from typing import Dict, Any
 from utils.logger import get_logger
-from utils.financial_validation import validate_financial_rules
+from utils.financial_validation import validate_financial_rules, compute_confidence_score
 
 logger = get_logger(__name__)
 
@@ -73,11 +73,42 @@ def display_verification_interface():
     
     st.markdown(f"### Verification Queue: {len(review_queue)} remaining")
     st.caption(f"Currently reviewing source file: `{current_record['filename']}`")
-    
-    # Run dynamic validation on load to show warnings immediately
+
+    # L7: Confidence Score Badge
     load_errors = validate_financial_rules(mapped_data)
+    confidence = compute_confidence_score(mapped_data, load_errors)
+    if confidence >= 0.8:
+        score_color = "#2ecc71"   # green
+        score_label = "High"
+    elif confidence >= 0.5:
+        score_color = "#f39c12"   # orange
+        score_label = "Medium"
+    else:
+        score_color = "#e74c3c"   # red
+        score_label = "Low"
+
+    st.markdown(
+        f"""
+        <div style='display:flex; align-items:center; gap:12px; margin-bottom:8px;'>
+            <span style='font-size:0.9rem; color:#888;'>AI Confidence:</span>
+            <span style='background:{score_color}22; color:{score_color}; border:1px solid {score_color};
+                         border-radius:20px; padding:2px 14px; font-size:0.9rem; font-weight:600;'>
+                {score_label} ({confidence:.0%})
+            </span>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # LLM retry warnings (items the self-healing loop could not fix)
+    llm_warnings = mapped_data.get("_math_warnings", [])
+    if llm_warnings:
+        with st.expander("⚠️ AI could not auto-correct these issues (review carefully)", expanded=True):
+            for w in llm_warnings:
+                st.warning(w)
+
     if load_errors:
-        st.warning("⚠️ High Integrity Warnings Found:")
+        st.warning("⚠️ Validation Issues Found:")
         for err in load_errors:
             st.error(err)
             

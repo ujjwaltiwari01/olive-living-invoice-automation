@@ -305,32 +305,52 @@ def remove_calculated_fields(payload: Dict[str, Any]) -> Dict[str, Any]:
 # ===================================================================
 # 5. resolve_customer_id
 # ===================================================================
-def resolve_customer_id(customer_name: Optional[str]) -> Dict[str, Any]:
+def resolve_customer_id(customer_name: Optional[str], gstin: Optional[str] = None) -> Dict[str, Any]:
     """
-    Resolves a customer name to a Zoho Books customer_id.
+    L5: Resolves a customer to a Zoho Books customer_id.
 
-    STUB: Returns a placeholder dict. When the Zoho API OAuth connection
-    is configured, this will call the Zoho Contacts API:
-        GET /contacts?contact_name={customer_name}
+    Strategy:
+      1. Try GSTIN-based lookup in customer_mapping.json (most reliable)
+      2. Fall back to customer_name stub with resolution flag
 
     Returns:
-        dict with customer_id (or customer_name fallback) and resolution flag.
+        dict with customer_id (or customer_name fallback) and resolution metadata
     """
-    result = {
-        "_requires_customer_id_resolution": True,
-    }
+    # L5: Try GSTIN-based resolution first
+    try:
+        from utils.customer_resolver import resolve_by_gstin
+        gstin_result = resolve_by_gstin(gstin, customer_name)
+        if gstin_result.get("resolved"):
+            logger.info(
+                f"CUSTOMER_RESOLVED: '{customer_name}' via GSTIN {gstin} → "
+                f"customer_id={gstin_result['customer_id']}"
+            )
+            return {
+                "customer_id": gstin_result["customer_id"],
+                "customer_name": gstin_result.get("customer_name", customer_name),
+            }
+        else:
+            logger.info(
+                f"CUSTOMER_GSTIN_MISS: GSTIN '{gstin}' not in mapping — "
+                f"reason={gstin_result.get('reason')}. Using customer_name fallback."
+            )
+    except Exception as e:
+        logger.warning(f"CUSTOMER_RESOLVER_ERROR: {e}. Falling back to name stub.")
 
-    if customer_name and customer_name.strip():
-        result["customer_name"] = customer_name.strip()
+    # Fallback: customer_name (requires manual customer_id entry in Zoho)
+    result = {"_requires_customer_id_resolution": True}
+    if customer_name and str(customer_name).strip():
+        result["customer_name"] = str(customer_name).strip()
         logger.warning(
-            f"customer_id resolution stubbed for '{customer_name}'. "
-            f"Actual Zoho Contacts API lookup needed before API submission."
+            f"CUSTOMER_ID_STUB: '{customer_name}' — add GSTIN→customer_id mapping "
+            f"to customer_mapping.json for automatic resolution."
         )
     else:
         result["customer_name"] = "Unknown Customer"
         logger.error("No customer name provided for customer_id resolution.")
 
     return result
+
 
 
 # ===================================================================
@@ -442,8 +462,11 @@ def build_zoho_payload(verified_payload: Dict[str, Any]) -> Tuple[Dict[str, Any]
     # Step 3: Map line items
     zoho_payload["line_items"] = map_line_items(normalized.get("line_items", []))
 
-    # Step 4: Resolve customer ID
-    customer_info = resolve_customer_id(normalized.get("Customer Name"))
+    # Step 4: Resolve customer ID (L5: GSTIN-based lookup first)
+    customer_info = resolve_customer_id(
+        normalized.get("Customer Name"),
+        gstin=normalized.get("GST Identification Number (GSTIN)")
+    )
     zoho_payload.update(customer_info)
 
     # Step 5: Remove calculated fields (safety pass on final payload)
