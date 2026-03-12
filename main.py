@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import json
 from utils.logger import get_logger
 from components.upload import display_upload_section
 from components.preview_table import display_invoice_table
@@ -62,7 +63,7 @@ def main():
     
     # 5. Extracted & Verified Invoice Data Section
     # Draw from our new 'invoice_records' tracking logic in Task 3
-    verified_records = [r for r in st.session_state.invoice_records if r["status"] == "VERIFIED"]
+    verified_records = [r for r in st.session_state.invoice_records if r["status"] in ("VERIFIED", "READY_FOR_ZOHO")]
     
     if verified_records:
         st.divider()
@@ -82,7 +83,8 @@ def main():
                 "Date": payload.get("Invoice Date", ""),
                 "Total Amount": round(total_amt, 2),
                 "Currency": payload.get("Currency Code", "INR"),
-                "Line Items": len(payload.get('line_items', []))
+                "Line Items": len(payload.get('line_items', [])),
+                "Zoho Status": "✅ Ready" if v["status"] == "READY_FOR_ZOHO" else "⏳ Pending"
             })
             
         extracted_df = pd.DataFrame(flat_results)
@@ -92,6 +94,52 @@ def main():
         for v in verified_records:
             with st.expander(f"View JSON for {v['filename']}"):
                 st.json(v["verified_payload"])
+        
+        # 6. Zoho Payload Preview & Conversion (Task 4)
+        st.divider()
+        st.markdown("### 🚀 Zoho Books API Payload")
+        st.caption("Convert verified invoices into Zoho Books API-compliant format.")
+        
+        from utils.zoho_schema_transformer import build_zoho_payload
+        
+        for idx, v in enumerate(verified_records):
+            inv_num = v["verified_payload"].get("Invoice Number", f"Invoice {idx+1}")
+            
+            with st.expander(f"📄 {inv_num} — {v['filename']}", expanded=(v["status"] != "READY_FOR_ZOHO")):
+                
+                if v["status"] == "READY_FOR_ZOHO" and v.get("zoho_payload"):
+                    # Already converted — show the payload
+                    st.success("✅ Zoho payload generated successfully.")
+                    st.json(v["zoho_payload"])
+                    
+                    # Download button
+                    payload_json = json.dumps(v["zoho_payload"], indent=2, ensure_ascii=False)
+                    st.download_button(
+                        label="📥 Download Zoho JSON",
+                        data=payload_json,
+                        file_name=f"zoho_{inv_num}.json",
+                        mime="application/json",
+                        key=f"download_zoho_{idx}"
+                    )
+                else:
+                    # Show convert button
+                    if st.button(f"🔄 Convert to Zoho Format", key=f"convert_zoho_{idx}"):
+                        zoho_payload, is_valid, errors = build_zoho_payload(v["verified_payload"])
+                        
+                        if is_valid:
+                            # Update record
+                            rec_idx = st.session_state.invoice_records.index(v)
+                            st.session_state.invoice_records[rec_idx]["status"] = "READY_FOR_ZOHO"
+                            st.session_state.invoice_records[rec_idx]["zoho_payload"] = zoho_payload
+                            logger.info(f"ZOHO_PAYLOAD_READY: {v['filename']}")
+                            st.rerun()
+                        else:
+                            st.error("❌ Zoho payload validation failed:")
+                            for err in errors:
+                                st.warning(f"• {err}")
+                            st.markdown("##### Generated Payload (with errors)")
+                            st.json(zoho_payload)
 
 if __name__ == "__main__":
     main()
+
