@@ -7,9 +7,9 @@
 
 ---
 
-## 💎 The Manager's Lens: Why Olive?
+## 💎  Why Olive Invoice Automation ?
 
-> "Olive isn't just a tool; it's a financial engine that converts administrative friction into operational velocity."
+> "Olive Invoice Automation isn't just a tool; it's a financial engine that converts administrative friction into operational velocity."
 
 ### 🚀 Efficiency Comparison: Manual vs. Olive
 | Metric | Manual Entry | Olive Automation | Outcome |
