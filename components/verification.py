@@ -158,14 +158,15 @@ def display_verification_interface():
         st.divider()
         
         # Action Buttons
-        a_col1, a_col2, a_col3 = st.columns([1, 1, 4])
+        a_col1, a_col2, a_col3, a_col4 = st.columns([1, 1.2, 1, 3])
         
         submit_approve = a_col1.form_submit_button("✅ Approve", type="primary")
-        submit_flag = a_col2.form_submit_button("🚩 Flag Issue")
-        submit_reject = a_col3.form_submit_button("❌ Reject")
+        submit_force = a_col2.form_submit_button("⚡ Force Approve", help="Bypass all validation errors and approve anyway.")
+        submit_flag = a_col3.form_submit_button("🚩 Flag Issue")
+        submit_reject = a_col4.form_submit_button("❌ Reject")
         
-        if submit_approve or submit_flag or submit_reject:
-            # Reconstruct the schema payload with user edits, preserving all 74 original LLM mapped keys
+        if submit_approve or submit_force or submit_flag or submit_reject:
+            # Reconstruct the schema payload with user edits
             try:
                 total_val = float(total_amt_input)
             except ValueError:
@@ -206,10 +207,14 @@ def display_verification_interface():
             # Re-run validation on edited data
             final_errors = validate_financial_rules(edited_payload)
             
-            if submit_approve:
-                if final_errors:
-                    st.error("Cannot approve: Validation failed. Please fix the errors above or Flag the invoice.")
+            if submit_approve or submit_force:
+                if submit_approve and final_errors:
+                    st.error("Cannot approve: Validation failed. Please fix the errors above or use 'Force Approve'.")
                 else:
+                    if submit_force and final_errors:
+                        edited_payload["bypassed_errors"] = final_errors
+                        logger.warning(f"INVOICE_FORCE_APPROVED: {current_record['filename']} with errors: {final_errors}")
+                    
                     st.session_state.invoice_records[idx]["mapped_data"] = edited_payload
                     st.session_state.invoice_records[idx]["status"] = "VERIFIED"
                     st.session_state.invoice_records[idx]["verified_payload"] = edited_payload

@@ -132,6 +132,28 @@ def validate_financial_rules(mapped_data: dict) -> list[str]:
     if has_tax and not gstin and currency == "INR" and gst_treatment == "business_gst":
         errors.append("GST Logic Failure: Tax % applied for INR B2B invoice but GSTIN is missing.")
 
+    # 5.1 Tax Amount Consistency (New L6 check)
+    tax_amount = float(mapped_data.get("tax_amount", 0.0) or 0.0)
+    if tax_amount > 0:
+        # Sum of (Qty * Price * Tax%) for all items
+        calculated_tax_sum = 0.0
+        for item in line_items:
+            try:
+                if not bool(item.get("Is Inclusive Tax", False)):
+                    q = float(item.get("Quantity", 0))
+                    p = float(item.get("Item Price", 0))
+                    t = float(item.get("Item Tax %", 0))
+                    calculated_tax_sum += (q * p * t / 100.0)
+            except (ValueError, TypeError):
+                pass
+        
+        if abs(calculated_tax_sum - tax_amount) > 2.0: # Allow small rounding
+            errors.append(
+                f"Tax Consistency Failure: Sum of line taxes ({calculated_tax_sum:.2f}) "
+                f"does not match Expected Tax Amount ({tax_amount:.2f}). "
+                f"Ensure the tax rate (e.g. 18%) is applied to individual line items."
+            )
+
     # 6. L6: GSTIN format check (when present)
     if gstin:
         clean_gstin = gstin.strip().upper().replace(" ", "")

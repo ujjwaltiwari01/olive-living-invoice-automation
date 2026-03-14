@@ -20,7 +20,7 @@ def initialize_session_state():
 def main():
     st.set_page_config(
         page_title="Olive Invoice Automation",
-        page_icon="🧾",
+        page_icon="olivelogo.png",
         layout="wide",
         initial_sidebar_state="expanded"
     )
@@ -29,18 +29,18 @@ def main():
 
     # Sidebar for additional settings/info
     with st.sidebar:
-        st.image("https://cdn-icons-png.flaticon.com/512/2936/2936630.png", width=50)
+        st.image("olivelogo.png", width=150)
         st.markdown("## Olive Automation")
         st.markdown("Automate your invoice ingestion pipeline with ease.")
         st.info("System Status: **Online** 🟢")
 
-    # Header Section
-    col1, col2 = st.columns([1, 15])
+    # Header Section with improved alignment
+    col1, col2 = st.columns([1, 10], vertical_alignment="center")
     with col1:
-        st.image("https://cdn-icons-png.flaticon.com/512/3135/3135694.png", width=60)
+        st.image("olivelogo.png", width=120)
     with col2:
         st.title("Olive Invoice Dashboard")
-        st.markdown("<p style='font-size: 1.1rem; color: gray; margin-top: -10px;'>Upload and manage invoices for automated Document AI processing</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size: 1.1rem; color: gray; margin-top: -15px;'>Upload and manage invoices for automated Document AI processing</p>", unsafe_allow_html=True)
     
     st.divider()
 

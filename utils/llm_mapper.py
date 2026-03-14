@@ -31,23 +31,22 @@ You will receive semi-structured JSON extracted by Google Document AI, including
 containing the full page text. Always cross-verify entities against raw_text.
 
 ═══════════════════════════════════════════════════════════════
- RULE 1 — GST TREATMENT
+ RULE 1 — ENTITY IDENTIFICATION (VENDOR vs CUSTOMER) [NEW]
 ═══════════════════════════════════════════════════════════════
-- Customer GSTIN present → "business_gst"
-- No customer GSTIN, consumer/patient/guest → "consumer"
-- International (non-INR currency) → "overseas"
-- SEZ → "business_sez"
+- These are incoming invoices/bills. **"Olive" (or Olive by Embassy, Olive Living) is the RECIPIENT.**
+- You MUST extract the **SUPPLIER (Seller/Vendor)** as the primary entity in "Customer Name".
+- Extract the **SUPPLIER'S GSTIN** in "GST Identification Number (GSTIN)". 
+- IGNORE Olive's name and GSTIN (starting with 29AA...) for these fields.
+- GST Treatment applies to the supplier (business_gst, business_none, etc.)
 
 ═══════════════════════════════════════════════════════════════
- RULE 2 — GSTIN VALIDATION [CRITICAL]
+ RULE 2 — SUPPLIER GSTIN VALIDATION [CRITICAL]
 ═══════════════════════════════════════════════════════════════
 A valid Indian GSTIN is EXACTLY 15 characters matching: ##AAAAA####A#Z#
-(2 digits + 5 uppercase letters + 4 digits + 1 letter + 1 alphanumeric + Z + 1 alphanumeric)
-
-If the OCR entity is fewer than 15 chars:
-  → Search `raw_text` for any 15-character GSTIN pattern
-  → If found, use it. If not found, set "GST Identification Number (GSTIN)" to null.
-NEVER output an invalid/truncated GSTIN.
+- You MUST find the GSTIN belonging to the **Supplier/Vendor** (usually at the top).
+- NEVER extract the GSTIN of the recipient (Olive).
+- If the identified Supplier GSTIN is truncated, search `raw_text` for a valid 15-char replacement.
+- NEVER output an invalid/truncated GSTIN.
 
 ═══════════════════════════════════════════════════════════════
  RULE 3 — LINE ITEM RATE EXTRACTION [MOST CRITICAL]
@@ -62,21 +61,25 @@ If computed_subtotal differs from the apparent subtotal by more than 5%:
   → For textile/commodity invoices with "qty × rate = amount" columns, look for the "rate" column explicitly
 
 ═══════════════════════════════════════════════════════════════
- RULE 4 — TAX HANDLING
+ RULE 4 — TAX HANDLING [CRITICAL]
 ═══════════════════════════════════════════════════════════════
-- IGST mentioned → use as total tax rate
-- CGST + SGST → sum them (9% + 9% = 18%)
-- Set Item Tax Type to "Tax Group"
-- Is Inclusive Tax (true): rate * qty = final line amount ALREADY INCLUDING tax
-- Is Inclusive Tax (false): rate * qty = pre-tax amount; tax added on top
-- To determine: if rate × qty × (1 + tax_rate) ≈ line_amount → NOT inclusive
-               if rate × qty ≈ line_amount → IS inclusive
+- CGST + SGST → ALWAYS SUM them into a single percentage (e.g., 9% + 9% = 18%).
+- **Rule 4-B: Tax Summary Lookup**: If the main table lacks tax columns, look for a "Tax Summary" or "GST Summary" table at the bottom.
+  → Every row in that summary table is indexed by HSN or Taxable Value.
+  → Map the HSN from each line item to the Rate in the summary table.
+  → If multiple items share an HSN, they MUST all have the same GST rate from the summary.
+- NEVER assume a flat tax rate. If the summary table shows 5% for some HSNs and 18% for others, you MUST reflect this in the individual line items.
+- Set Item Tax Type to "Tax Group". Tax Inclusive (true/false) based on whether Subtotal + Tax = Total.
 
 ═══════════════════════════════════════════════════════════════
- RULE 5 — TOTAL AMOUNT & OVERHEADS [CRITICAL]
+ RULE 5 — TOTAL AMOUNT, TAX AMOUNT & OVERHEADS [CRITICAL]
 ═══════════════════════════════════════════════════════════════
 Document AI often misidentifies the subtotal as total_amount. YOU MUST use raw_text
 to find the true "Grand Total / Total Invoice Value / Net Amount Payable".
+
+TAX AMOUNT: You MUST sum all tax components. If the footer has separate rows for
+"CGST 9%" and "SGST 9%", the tax_amount must be the SUM (e.g., 768.6 + 768.6 = 1537.2).
+NEVER just pick one row's value.
 
 Before finalizing total_amount, scan raw_text for:
   "Freight", "Shipping", "Packing", "Handling", "Discount", "Round Off", "TCS", "TDS"
@@ -98,9 +101,9 @@ Indian numbers: "1,60,760" = 160760.0 (lakh format). Never confuse commas with d
 ═══════════════════════════════════════════════════════════════
  RULE 7 — FIELD DEFAULTS
 ═══════════════════════════════════════════════════════════════
-- Always extract Invoice Number exactly as printed
-- Customer Name = the entity being billed
-- If Due Date is missing, default to Invoice Date
+- Always extract Invoice Number exactly as printed.
+- **Customer Name = The Vendor/Supplier/Seller.** (Never Use Olive).
+- If Due Date is missing, default to Invoice Date.
 - Never hallucinate data. If a field cannot be found in raw_text, use null.
 """
 
@@ -173,6 +176,32 @@ def math_verify(mapped_data: dict) -> list:
                     f"({deviation*100:.1f}% off). "
                     f"Re-examine raw_text and correct line item rates/quantities. "
                     f"Do NOT change total_amount — fix the line items."
+                )
+
+        # Check 2b: Tax consistency [TIGHTENED & MULTI-RATE AWARE]
+        declared_tax = float(mapped_data.get("tax_amount") or 0)
+        computed_tax = 0.0
+        if not is_inclusive:
+            computed_tax = sum((float(i.get("Quantity") or 0) * float(i.get("Item Price") or 0) * float(i.get("Item Tax %") or 0) / 100) for i in line_items)
+        
+        if declared_tax > 0:
+            tax_deviation = abs(declared_tax - computed_tax)
+            if tax_deviation > 2.0: # Allow 2 rupee rounding
+                # Detect if the AI hallucinated a flat rate (e.g. all 18% when some are 5%)
+                rates_used = set(float(i.get("Item Tax %") or 0) for i in line_items if float(i.get("Item Tax %") or 0) > 0)
+                flat_rate_hint = ""
+                if len(rates_used) == 1:
+                    flat_rate_hint = (
+                        f" (Note: You applied a flat {list(rates_used)[0]}% to all items. "
+                        "This invoice likely has MIXED rates, e.g., some items at 5% and some at 18%. "
+                        "Cross-reference the HSN/SAC code of each item with the 'Tax Summary' table at the bottom "
+                        "to find the correct rate for each row.)"
+                    )
+                
+                errors.append(
+                    f"Tax mismatch: Top-level tax_amount={declared_tax:.2f} does not match "
+                    f"sum of line item taxes={computed_tax:.2f}.{flat_rate_hint} "
+                    f"Correct the Item Tax % for each line item using the footer summary."
                 )
 
     # Check 3: Quantity=0 items
